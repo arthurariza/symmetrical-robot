@@ -17,6 +17,7 @@ gem "guard-livereload", require: false
 
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
+  gem "factory_bot_rails", "~> 6.4.4"
   gem "rspec-rails", "~> 6.1.0"
 end
 
