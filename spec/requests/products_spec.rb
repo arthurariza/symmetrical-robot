@@ -1,26 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "/products", type: :request do
-  let(:valid_attributes) {
-    {
-      name: 'A product',
-      price: 1
-    }
-  }
-
-  let(:invalid_attributes) {
-    {
-      price: -1
-    }
-  }
-
-  let(:valid_headers) {
-    {}
-  }
+  let(:product) { create(:product) }
+  let(:valid_headers) { {} }
+  let(:valid_attributes) { attributes_for(:product) }
+  let(:invalid_attributes) { attributes_for(:product, price: -1) }
 
   describe "GET /index" do
     it "renders a successful response" do
-      Product.create! valid_attributes
       get products_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
@@ -28,7 +15,6 @@ RSpec.describe "/products", type: :request do
 
   describe "GET /show" do
     it "renders a successful response" do
-      product = Product.create! valid_attributes
       get product_url(product), as: :json
       expect(response).to be_successful
     end
@@ -80,7 +66,6 @@ RSpec.describe "/products", type: :request do
       }
 
       it "updates the requested product" do
-        product = Product.create! valid_attributes
         patch product_url(product),
               params: { product: new_attributes }, headers: valid_headers, as: :json
         product.reload
@@ -89,7 +74,6 @@ RSpec.describe "/products", type: :request do
       end
 
       it "renders a JSON response with the product" do
-        product = Product.create! valid_attributes
         patch product_url(product),
               params: { product: new_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:ok)
@@ -99,7 +83,6 @@ RSpec.describe "/products", type: :request do
 
     context "with invalid parameters" do
       it "renders a JSON response with errors for the product" do
-        product = Product.create! valid_attributes
         patch product_url(product),
               params: { product: invalid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:unprocessable_entity)
@@ -110,7 +93,7 @@ RSpec.describe "/products", type: :request do
 
   describe "DELETE /destroy" do
     it "destroys the requested product" do
-      product = Product.create! valid_attributes
+      product = create(:product)
       expect {
         delete product_url(product), headers: valid_headers, as: :json
       }.to change(Product, :count).by(-1)
