@@ -1,3 +1,62 @@
+# README
+
+## Development Setup:
+
+### 1. Clone Repository
+
+```
+git@github.com:arthurariza/symmetrical-robot.git
+cd symmetrical-robot
+```
+
+### 2. Copy docker files
+
+```
+cp docker/development/.env.example .env
+cp docker/development/Dockerfile.example Dockerfile
+cp docker/development/docker-entrypoint.sh.example docker-entrypoint.sh
+cp docker/development/docker-compose.yml.example docker-compose.yml
+chmod +x docker-entrypoint.sh
+```
+
+`Make sure to fill in the JWT_SECRET`
+
+### 3. Build docker images
+
+```
+docker compose build --no-cache
+```
+
+### 4. Start containers in background
+
+```
+docker compose up -d
+```
+
+### 5. Run database setup
+
+```
+docker compose exec web rails db:setup
+```
+
+### 6. The server should be running on port 3000
+
+## Sample Endpoints:
+
+`Sample endpoints are included in the endpoints.json file`
+
+## How To Run Specs
+
+```
+docker compose exec web rspec -fd
+```
+
+## Stop Containers Running In Background
+
+```
+docker compose stop
+```
+
 # Desafio técnico e-commerce
 
 ## Nossas expectativas
@@ -16,20 +75,22 @@ O que gostaríamos de ver:
 - Você deve enviar para nós o link do repositório público com a aplicação desenvolvida (GitHub, BitBucket, etc.).
 
 ## O Desafio - Carrinho de compras
+
 O desafio consiste em uma API para gerenciamento do um carrinho de compras de e-commerce.
 
 Você deve desenvolver utilizando a linguagem Ruby e framework Rails, uma API Rest que terá 3 endpoins que deverão implementar as seguintes funcionalidades:
 
 ### 1. Registrar um produto no carrinho
+
 Criar um endpoint para inserção de produtos no carrinho.
 
 Se não existir um carrinho para a sessão, criar o carrinho e salvar o ID do carrinho na sessão.
 
 Adicionar o produto no carrinho e devolver o payload com a lista de produtos do carrinho atual.
 
-
 ROTA: `/cart`
 Payload:
+
 ```js
 {
   "product_id": 345, // id do produto sendo adicionado
@@ -38,6 +99,7 @@ Payload:
 ```
 
 Response
+
 ```js
 {
   "id": 789, // id do carrinho
@@ -62,11 +124,13 @@ Response
 ```
 
 ### 2. Listar itens do carrinho atual
+
 Criar um endpoint para listar os produtos no carrinho atual.
 
 ROTA: `/cart`
 
 Response:
+
 ```js
 {
   "id": 789, // id do carrinho
@@ -90,19 +154,23 @@ Response:
 }
 ```
 
-### 3. Alterar a quantidade de produtos no carrinho 
+### 3. Alterar a quantidade de produtos no carrinho
+
 Um carrinho pode ter _N_ produtos, se o produto já existir no carrinho, apenas a quantidade dele deve ser alterada
 
 ROTA: `/cart/add_item`
 
 Payload
+
 ```json
 {
   "product_id": 1230,
   "quantity": 1
 }
 ```
+
 Response:
+
 ```json
 {
   "id": 1,
@@ -111,27 +179,26 @@ Response:
       "id": 1230,
       "name": "Nome do produto X",
       "quantity": 2, // considerando que esse produto já estava no carrinho
-      "unit_price": 7.00, 
-      "total_price": 14.00, 
+      "unit_price": 7.0,
+      "total_price": 14.0
     },
     {
       "id": 01020,
       "name": "Nome do produto Y",
       "quantity": 1,
-      "unit_price": 9.90, 
-      "total_price": 9.90, 
-    },
+      "unit_price": 9.9,
+      "total_price": 9.9
+    }
   ],
   "total_price": 23.9
 }
 ```
 
-### 3. Remover um produto do carrinho 
+### 3. Remover um produto do carrinho
 
-Criar um endpoint para excluir um produto do do carrinho. 
+Criar um endpoint para excluir um produto do do carrinho.
 
 ROTA: `/cart/:product_id`
-
 
 #### Detalhes adicionais:
 
@@ -141,6 +208,7 @@ ROTA: `/cart/:product_id`
 - Certifique-se de que o endpoint lida corretamente com casos em que o carrinho está vazio após a remoção do produto.
 
 ### 5. Excluir carrinhos abandonados
+
 Um carrinho é considerado abandonado quando estiver sem interação (adição ou remoção de produtos) há mais de 3 horas.
 
 - Quando este cenário ocorrer, o carrinho deve ser marcado como abandonado.
@@ -149,41 +217,45 @@ Um carrinho é considerado abandonado quando estiver sem interação (adição o
 - Configure a aplicação para executar este Job nos períodos especificados acima.
 
 ### Detalhes adicionais:
+
 - O Job deve ser executado regularmente para verificar e marcar carrinhos como abandonados após 3 horas de inatividade.
 - O Job também deve verificar periodicamente e excluir carrinhos que foram marcados como abandonados por mais de 7 dias.
 
 ### Como resolver
 
 #### Implementação
+
 Você deve usar como base o código disponível nesse repositório e expandi-lo para que atenda as funcionalidade descritas acima.
 
 Há trechos parcialmente implementados e também sugestões de locais para algumas das funcionalidades sinalizados com um `# TODO`. Você pode segui-los ou fazer da maneira que julgar ser a melhor a ser feita, desde que atenda os contratos de API e funcionalidades descritas.
 
 #### Testes
+
 Existem testes pendentes, eles estão marcados como <span style="color:green;">Pending</span>, e devem ser implementados para garantir a cobertura dos trechos de código implementados por você.
-Alguns testes já estão passando e outros estão com erro. Com a sua implementação os testes com erro devem passar a funcionar. 
+Alguns testes já estão passando e outros estão com erro. Com a sua implementação os testes com erro devem passar a funcionar.
 A adição de novos testes é sempre bem-vinda, mas sem alterar os já implementados.
 
-
 ### O que esperamos
+
 - Implementação dos testes faltantes e de novos testes para os métodos/serviços/entidades criados
 - Construção das 4 rotas solicitadas
 - Implementação de um job para controle dos carrinhos abandonados
 
-
 ### Itens adicionais / Legais de ter
+
 - Utilização de factory na construção dos testes
 - Desenvolvimento do docker-compose / dockerização da app
 
 A aplicação já possui um Dockerfile, que define como a aplicação deve ser configurada dentro de um contêiner Docker. No entanto, para completar a dockerização da aplicação, é necessário criar um arquivo `docker-compose.yml`. O arquivo irá definir como os vários serviços da aplicação (por exemplo, aplicação web, banco de dados, etc.) interagem e se comunicam.
 
-- Adicione tratamento de erros para situações excepcionais válidas, por exemplo: garantir que um produto não possa ter quantidade negativa. 
+- Adicione tratamento de erros para situações excepcionais válidas, por exemplo: garantir que um produto não possa ter quantidade negativa.
 
-- Se desejar você pode adicionar a configuração faltante no arquivo `docker-compose.yml` e garantir que a aplicação rode de forma correta utilizando Docker. 
+- Se desejar você pode adicionar a configuração faltante no arquivo `docker-compose.yml` e garantir que a aplicação rode de forma correta utilizando Docker.
 
 ## Informações técnicas
 
 ### Dependências
+
 - ruby 3.3.1
 - rails 7.1.3.2
 - postgres 16
@@ -192,27 +264,33 @@ A aplicação já possui um Dockerfile, que define como a aplicação deve ser c
 ### Como executar o projeto
 
 ## Executando a app sem o docker
+
 Dado que todas as as ferramentas estão instaladas e configuradas:
 
 Instalar as dependências do:
+
 ```bash
 bundle install
 ```
 
 Executar o sidekiq:
+
 ```bash
 bundle exec sidekiq
 ```
 
 Executar projeto:
+
 ```bash
 bundle exec rails server
 ```
 
 Executar os testes:
+
 ```bash
 bundle exec rspec
 ```
 
 ### Como enviar seu projeto
+
 Salve seu código em um versionador de código (GitHub, GitLab, Bitbucket) e nos envie o link publico. Se achar necessário, informe no README as instruções para execução ou qualquer outra informação relevante para correção/entendimento da sua solução.
