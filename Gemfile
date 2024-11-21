@@ -14,7 +14,6 @@ gem "sidekiq-scheduler", "~> 5.0", ">= 5.0.3"
 gem "guard"
 gem "guard-livereload", require: false
 
-
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ]
   gem "factory_bot_rails", "~> 6.4.4"
@@ -26,3 +25,7 @@ group :development do
   gem "rubocop", "~> 1.68", require: false
   gem "rubocop-rails-omakase", require: false
 end
+
+gem "active_model_serializers", "~> 0.10.0"
+gem "bcrypt", "~> 3.1.7"
+gem "jwt", "~> 2.8.2"

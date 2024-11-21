@@ -6,4 +6,12 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   root "rails/health#show"
+
+  namespace :users do
+    resources :registrations, only: [ :create ]
+    resources :authentications, only: [ :create ]
+  end
+
+  match "signin", to: "users/authentications#create", via: :post
+  match "signup", to: "users/registrations#create", via: :post
 end
