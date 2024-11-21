@@ -13,6 +13,7 @@ cd symmetrical-robot
 
 ```
 cp docker/development/.env.example .env
+cp docker/development/.env.example .env.test
 cp docker/development/Dockerfile.example Dockerfile
 cp docker/development/docker-entrypoint.sh.example docker-entrypoint.sh
 cp docker/development/docker-compose.yml.example docker-compose.yml
