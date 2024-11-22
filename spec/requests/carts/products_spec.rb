@@ -50,4 +50,49 @@ RSpec.describe Carts::ProductsController, type: :request do
       expect(response.parsed_body).to eq({ "error" => "Product not found" })
     end
   end
+
+  describe 'DELETE /cart/:product_id' do
+    let(:product_id) { '1' }
+
+    before do
+      allow(Cart::DestroyProductService).to receive(:call).with(user, product_id).and_return(cart)
+    end
+
+    it 'calls the Cart::DestroyProductService with the correct parameters' do
+      delete delete_cart_product_cart_url(product_id), headers: { "Authorization" => "Bearer #{jwt}" }
+
+      expect(Cart::DestroyProductService).to have_received(:call).with(user, product_id)
+    end
+
+    it 'renders the serialized cart' do
+      delete delete_cart_product_cart_url(product_id), headers: { "Authorization" => "Bearer #{jwt}" }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.keys).to eq([ 'id', 'total_price', 'products' ])
+    end
+
+    it 'returns a 401 if the user is not authenticated' do
+      delete delete_cart_product_cart_url(product_id)
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'returns a 422 if validations fail' do
+      allow(Cart::DestroyProductService).to receive(:call).and_raise(ActiveRecord::RecordInvalid)
+
+      delete delete_cart_product_cart_url(product_id), headers: { "Authorization" => "Bearer #{jwt}" }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body).to eq({ "error" => "Record invalid" })
+    end
+
+    it 'returns a 404 if the product is not found' do
+      allow(Cart::DestroyProductService).to receive(:call).and_raise(ActiveRecord::RecordNotFound, "Product not found")
+
+      delete delete_cart_product_cart_url(product_id), headers: { "Authorization" => "Bearer #{jwt}" }
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.parsed_body).to eq({ "error" => "Product not found" })
+    end
+  end
 end
