@@ -34,11 +34,11 @@ class Cart::ManageProductService < ApplicationService
     cart_product = cart.cart_products.find_or_initialize_by(product_id: @product_id)
     cart_product.quantity += @quantity
     cart_product.unit_price = product.price
-    cart_product.save
+    cart_product.save!
   end
 
   def update_cart_total_price(cart)
     cart.total_price = cart.cart_products.sum(&:total_price)
-    cart.save
+    cart.save!
   end
 end

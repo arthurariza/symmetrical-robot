@@ -51,10 +51,10 @@ RSpec.describe Cart::ManageProductService do
         let(:service) { described_class.new(user, product.id, -1) }
         let(:cart) { create(:cart, user: user) }
 
-        it 'does not raises an error and does not update the quantity' do
+        it 'raises an error and does not update the quantity' do
           cart_product = create(:cart_product, cart: cart, product: product, quantity: 1, unit_price: '10.0')
 
-          expect { service.call }.not_to raise_error
+          expect { service.call }.to raise_error ActiveRecord::RecordInvalid
 
           expect(cart.cart_products.count).to eq(1)
           expect(cart_product.reload.quantity).to eq(1)

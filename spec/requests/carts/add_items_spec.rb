@@ -31,5 +31,23 @@ RSpec.describe "/cart/add_item", type: :request do
 
       expect(response).to have_http_status(:unauthorized)
     end
+
+    it 'returns a 422 if validations fail' do
+      allow(Cart::ManageProductService).to receive(:call).and_raise(ActiveRecord::RecordInvalid)
+
+      post add_item_cart_url, params: { product_id: product_id, quantity: quantity }, headers: { "Authorization" => "Bearer #{jwt}" }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body).to eq({ "error" => "Record invalid" })
+    end
+
+    it 'returns a 404 if the product is not found' do
+      allow(Cart::ManageProductService).to receive(:call).and_raise(ActiveRecord::RecordNotFound, "Product not found")
+
+      post add_item_cart_url, params: { product_id: product_id, quantity: quantity }, headers: { "Authorization" => "Bearer #{jwt}" }
+
+      expect(response).to have_http_status(:not_found)
+      expect(response.parsed_body).to eq({ "error" => "Product not found" })
+    end
   end
 end
