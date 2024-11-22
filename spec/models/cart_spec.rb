@@ -5,6 +5,38 @@ RSpec.describe Cart, type: :model do
     it { should validate_numericality_of(:total_price).is_greater_than_or_equal_to(0) }
   end
 
+  context 'associations' do
+    it { should have_many(:cart_products) }
+    it { should have_many(:products).through(:cart_products) }
+    it { should belong_to(:user) }
+  end
+
+  describe '#total_price=' do
+    it 'converts the total_price to a BigDecimal' do
+      cart = Cart.new
+      cart.total_price = '19.99'
+      expect(cart.total_price).to eq(BigDecimal('19.99'))
+    end
+
+    it 'handles integer values correctly' do
+      cart = Cart.new
+      cart.total_price = '20'
+      expect(cart.total_price).to eq(BigDecimal('20'))
+    end
+
+    it 'handles float values correctly' do
+      cart = Cart.new
+      cart.total_price = '20.50'
+      expect(cart.total_price).to eq(BigDecimal('20.50'))
+    end
+
+    it 'handles invalid values gracefully' do
+      cart = Cart.new
+      cart.total_price = 'abcd'
+      expect(cart.total_price).to be_nil
+    end
+  end
+
   describe 'mark_as_abandoned' do
     let(:shopping_cart) { create(:shopping_cart) }
 

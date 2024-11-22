@@ -7,6 +7,8 @@ Rails.application.routes.draw do
 
   root "rails/health#show"
 
+  resource :cart, controller: "carts", only: %i[show]
+
   namespace :users do
     resources :registrations, only: [ :create ]
     resources :authentications, only: [ :create ]
