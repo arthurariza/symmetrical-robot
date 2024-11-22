@@ -10,7 +10,8 @@ class Cart::DestroyProductService < ApplicationService
 
     destroy_product_in_cart!(product)
 
-    update_cart_total_price!(cart)
+
+    cart.update_total_price!
 
     cart
   end
@@ -31,10 +32,5 @@ class Cart::DestroyProductService < ApplicationService
 
   def destroy_product_in_cart!(product)
     product.destroy!
-  end
-
-  def update_cart_total_price!(cart)
-    cart.total_price = cart.cart_products.sum(&:total_price)
-    cart.save!
   end
 end

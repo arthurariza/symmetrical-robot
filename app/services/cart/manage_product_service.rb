@@ -11,7 +11,7 @@ class Cart::ManageProductService < ApplicationService
 
     update_cart_product(cart, product)
 
-    update_cart_total_price(cart)
+    cart.update_total_price!
 
     cart
   end
@@ -35,10 +35,5 @@ class Cart::ManageProductService < ApplicationService
     cart_product.quantity += @quantity
     cart_product.unit_price = product.price
     cart_product.save!
-  end
-
-  def update_cart_total_price(cart)
-    cart.total_price = cart.cart_products.sum(&:total_price)
-    cart.save!
   end
 end

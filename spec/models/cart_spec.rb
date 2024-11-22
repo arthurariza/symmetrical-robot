@@ -37,6 +37,38 @@ RSpec.describe Cart, type: :model do
     end
   end
 
+  describe '#update_total_price!' do
+    let(:cart) { create(:cart) }
+    let(:product1) { create(:product, price: '10.0') }
+    let(:product2) { create(:product, price: '20.0') }
+
+    before do
+      create(:cart_product, cart: cart, product: product1, quantity: 1, unit_price: '10.0')
+      create(:cart_product, cart: cart, product: product2, quantity: 2, unit_price: '20.0')
+    end
+
+    it 'updates the total_price of the cart' do
+      cart.update_total_price!
+      expect(cart.total_price).to eq(50.0)
+    end
+
+    it 'saves the cart' do
+      expect(cart).to receive(:save!)
+      cart.update_total_price!
+    end
+
+    context 'when there are no products in the cart' do
+      before do
+        cart.cart_products.destroy_all
+      end
+
+      it 'sets the total_price to 0' do
+        cart.update_total_price!
+        expect(cart.total_price).to eq(0.0)
+      end
+    end
+  end
+
   describe 'mark_as_abandoned' do
     let(:shopping_cart) { create(:shopping_cart) }
 

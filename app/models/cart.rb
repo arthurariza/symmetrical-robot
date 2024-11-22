@@ -11,5 +11,10 @@ class Cart < ApplicationRecord
     nil
   end
 
+  def update_total_price!
+    self.total_price = self.cart_products.sum(&:total_price)
+    save!
+  end
+
   # TODO: lógica para marcar o carrinho como abandonado e remover se abandonado
 end
