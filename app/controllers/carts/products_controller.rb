@@ -1,4 +1,4 @@
-class Carts::AddItemsController < ApplicationController
+class Carts::ProductsController < ApplicationController
   before_action :authorize_user!
 
   def create
@@ -7,6 +7,12 @@ class Carts::AddItemsController < ApplicationController
     render json: cart
   end
 
+  def destroy
+    return render json: { message: "Here" }
+    cart = Cart::DestroyProductService.call(current_user)
+
+    render json: cart
+  end
   private
 
   def add_items_params

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "/cart/add_item", type: :request do
+RSpec.describe Carts::ProductsController, type: :request do
   let(:user) { create(:user) }
   let(:jwt) { JWT.encode({ user_id: user.id }, ENV.fetch("JWT_SECRET")) }
   let(:cart) { create(:cart, user: user) }
