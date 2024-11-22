@@ -7,7 +7,9 @@ Rails.application.routes.draw do
 
   root "rails/health#show"
 
-  resource :cart, controller: "carts", only: %i[show create]
+  resource :cart, controller: "carts", only: %i[show create] do
+     post "add_item", to: "carts/add_items#create"
+  end
 
   namespace :users do
     resources :registrations, only: [ :create ]

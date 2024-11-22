@@ -8,7 +8,7 @@ class CartsController < ApplicationController
   end
 
   def create
-    cart = Cart::ManageProductService.call(current_user, params[:product_id], params[:quantity])
+    cart = Cart::ManageProductService.call(current_user, cart_params[:product_id], cart_params[:quantity])
 
     render json: cart
   end
