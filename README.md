@@ -52,6 +52,12 @@ docker compose exec web rails db:setup
 docker compose exec web rspec -fd
 ```
 
+## How To Open A Terminal Session Inside Docker Container
+
+```
+docker compose exec web sh
+```
+
 ## Stop Containers Running In Background
 
 ```

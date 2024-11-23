@@ -32,6 +32,17 @@ services:
         depends_on:
             - db
             - redis
+            
+    workers:
+        build: .
+        command: bundle exec sidekiq -C config/sidekiq.yml
+        volumes:
+            - .:/rails
+        env_file:
+            - .env
+        depends_on:
+            - db
+            - redis
 
     test:
         build: .
