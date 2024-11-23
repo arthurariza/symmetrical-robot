@@ -4,10 +4,10 @@ class Cart::FindService < ApplicationService
   end
 
   def call
-    cart = Cart.where(user: @user).last
+    cart = Cart.includes([ cart_products: :product ]).where(user: @user).last
 
     cart = Cart.create(user: @user, total_price: "0") unless cart.present?
 
-    cart
+    cart.reload
   end
 end
