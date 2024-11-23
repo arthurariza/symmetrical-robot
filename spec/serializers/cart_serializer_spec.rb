@@ -18,7 +18,7 @@ RSpec.describe CartSerializer, type: :serializer do
 
   it 'serializes the cart_products as products' do
     expect(serialized_json['products']).to be_an(Array)
-    expect(serialized_json['products'].first['id']).to eq(cart_product.id)
+    expect(serialized_json['products'].first['id']).to eq(product.id)
     expect(serialized_json['products'].first['name']).to eq('Test Product')
     expect(serialized_json['products'].first['quantity']).to eq(cart_product.quantity)
     expect(serialized_json['products'].first['unit_price']).to eq(10.0)
