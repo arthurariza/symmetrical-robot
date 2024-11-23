@@ -1,6 +1,10 @@
 class CartProductSerializer < ActiveModel::Serializer
   attributes :id, :name, :quantity, :unit_price, :total_price
 
+  def id
+    object.product.id
+  end
+
   def name
     object.product.name
   end

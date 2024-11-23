@@ -8,7 +8,7 @@ RSpec.describe CartProductSerializer, type: :serializer do
   let(:serialized_json) { JSON.parse(serialization.to_json) }
 
   it 'serializes the id' do
-    expect(serialized_json['id']).to eq(cart_product.id)
+    expect(serialized_json['id']).to eq(product.id)
   end
 
   it 'serializes the name' do
