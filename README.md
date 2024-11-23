@@ -5,7 +5,7 @@
 ### 1. Clone Repository
 
 ```
-git@github.com:arthurariza/symmetrical-robot.git
+git clone git@github.com:arthurariza/symmetrical-robot.git
 cd symmetrical-robot
 ```
 
