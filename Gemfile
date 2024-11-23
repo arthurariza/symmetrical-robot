@@ -23,6 +23,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "bullet"
   gem "rubocop", "~> 1.68", require: false
   gem "rubocop-rails-omakase", require: false
 end
