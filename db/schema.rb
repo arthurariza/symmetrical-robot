@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_22_230203) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_23_161825) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -32,6 +32,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_22_230203) do
     t.bigint "user_id", null: false
     t.datetime "last_interaction_at", default: -> { "CURRENT_TIMESTAMP" }
     t.boolean "abandoned", default: false
+    t.index ["abandoned", "last_interaction_at"], name: "index_carts_on_abandoned_and_last_interaction_at"
     t.index ["user_id"], name: "index_carts_on_user_id"
   end
 
