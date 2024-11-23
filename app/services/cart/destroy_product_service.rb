@@ -10,8 +10,8 @@ class Cart::DestroyProductService < ApplicationService
 
     destroy_product_in_cart!(product)
 
-
     cart.update_total_price!
+    cart.update_last_interaction
 
     cart
   end

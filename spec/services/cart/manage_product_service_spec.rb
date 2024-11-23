@@ -8,7 +8,7 @@ RSpec.describe Cart::ManageProductService do
   describe '#call' do
     context 'when the product exists' do
       context 'when the user has an existing cart' do
-        let!(:cart) { create(:cart, user: user) }
+        let!(:cart) { create(:cart, user: user, last_interaction_at: 2.hours.ago) }
 
         it 'adds the product to the cart' do
           expect { service.call }.to change { cart.cart_products.count }.by(1)
@@ -24,6 +24,10 @@ RSpec.describe Cart::ManageProductService do
           create(:cart_product, cart: cart, product: product, quantity: 1, unit_price: '10.0')
           service.call
           expect(cart.reload.total_price).to eq(30.0)
+        end
+
+        it 'updates the last_interaction_at attribute of the cart' do
+          expect { service.call }.to change { cart.reload.last_interaction_at }
         end
       end
 

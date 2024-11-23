@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Cart::DestroyProductService do
   let(:user) { create(:user) }
   let(:product) { create(:product, price: '10.0') }
-  let(:cart) { create(:cart, user: user) }
+  let(:cart) { create(:cart, user: user, last_interaction_at: 2.hours.ago) }
   let(:service) { described_class.new(user, product.id) }
 
   describe '#call' do
@@ -24,6 +24,10 @@ RSpec.describe Cart::DestroyProductService do
       it 'returns the cart' do
         result = service.call
         expect(result).to eq(cart)
+      end
+
+      it 'updates the last_interaction_at attribute of the cart' do
+        expect { service.call }.to change { cart.reload.last_interaction_at }
       end
     end
 

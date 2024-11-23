@@ -11,6 +11,11 @@ RSpec.describe Cart, type: :model do
     it { should belong_to(:user) }
   end
 
+  context 'class constants' do
+    it { expect(Cart::INACTIVE_HOURS_TO_ABANDON).to eq(3) }
+    it { expect(Cart::INACTIVE_DAYS_TO_REMOVE).to eq(7) }
+  end
+
   describe '#total_price=' do
     it 'converts the total_price to a BigDecimal' do
       cart = Cart.new
@@ -69,21 +74,33 @@ RSpec.describe Cart, type: :model do
     end
   end
 
-  describe 'mark_as_abandoned' do
-    let(:shopping_cart) { create(:shopping_cart) }
+  describe 'toggle_abandoned' do
+    context 'when cart is not abandoned' do
+      it 'marks the shopping cart as abandoned if inactive for 3 hours' do
+        cart = create(:cart, last_interaction_at: 3.hours.ago, abandoned: false)
 
-    xit 'marks the shopping cart as abandoned if inactive for a certain time' do
-      shopping_cart.update(last_interaction_at: 3.hours.ago)
-      expect { shopping_cart.mark_as_abandoned }.to change { shopping_cart.abandoned? }.from(false).to(true)
+        expect { cart.toggle_abandoned }.to change { cart.abandoned? }.from(false).to(true)
+      end
+
+      it 'does not change abandoned when active within 3 hours' do
+        cart = create(:cart, last_interaction_at: 2.hours.ago, abandoned: false)
+
+        expect { cart.toggle_abandoned }.not_to change { cart.abandoned? }
+      end
     end
-  end
 
-  describe 'remove_if_abandoned' do
-    let(:shopping_cart) { create(:shopping_cart, last_interaction_at: 7.days.ago) }
+    context 'when cart is abandoned' do
+      it 'marks the shopping cart as not abandoned if active within 3 hours' do
+        cart = create(:cart, last_interaction_at: 2.hours.ago, abandoned: true)
 
-    xit 'removes the shopping cart if abandoned for a certain time' do
-      shopping_cart.mark_as_abandoned
-      expect { shopping_cart.remove_if_abandoned }.to change { Cart.count }.by(-1)
+        expect { cart.toggle_abandoned }.to change { cart.abandoned? }.from(true).to(false)
+      end
+
+      it 'does not change abandoned if still incative' do
+        cart = create(:cart, last_interaction_at: 3.hours.ago, abandoned: true)
+
+        expect { cart.toggle_abandoned }.not_to change { cart.abandoned? }
+      end
     end
   end
 end

@@ -7,3 +7,16 @@
   - mailers
   - active_storage_analysis
   - active_storage_purge
+
+:scheduler:
+  :schedule:
+    destroy_abandoned_carts:
+      cron: "0 0 * * *" # Runs every day at midnight
+      class: Cart::DestroyAbandonedJob
+      description: "Destroy abandoned carts"
+      enabled: true
+    toggle_carts:
+      cron: "0 * * * *" # Runs every hour
+      class: Cart::ToggleAbandonedJob
+      description: "Toggle carts"
+      enabled: true

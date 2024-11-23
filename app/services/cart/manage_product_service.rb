@@ -12,6 +12,7 @@ class Cart::ManageProductService < ApplicationService
     update_cart_product(cart, product)
 
     cart.update_total_price!
+    cart.update_last_interaction
 
     cart
   end
